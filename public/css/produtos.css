@@ -1,0 +1,82 @@
+.catalogo-container {
+    background-color: #111;
+    border-radius: 10px;
+    padding: 20px;
+    min-height: 85vh;
+}
+
+/* Card do produto */
+.produto-card {
+    background: #1c1c1c;
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+    color: #fff;
+    position: relative;
+    height: 100%;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.produto-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+}
+
+/* Status (disponível/indisponível) */
+.produto-card .status {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: green;
+    color: white;
+    font-size: 0.8rem;
+    font-weight: bold;
+    padding: 3px 8px;
+    border-radius: 5px;
+}
+
+.produto-card .status.indisponivel {
+    background: red;
+}
+
+/* Imagem */
+.produto-img img {
+    max-width: 100%;
+    max-height: 150px;
+    object-fit: contain;
+    margin-bottom: 10px;
+}
+
+/* Informações */
+.produto-body {
+    text-align: left;
+}
+
+.produto-nome {
+    font-size: 1rem;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.produto-preco {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #facc15; /* amarelo */
+}
+
+.produto-sku,
+.produto-cat {
+    font-size: 0.85rem;
+    color: #aaa;
+    margin: 0;
+}
+
+.card-produto img{
+    width: 100%;
+    height: 200px;         /* altura fixa para todas */
+    object-fit: cover;     /* mantém proporção e corta o excesso */
+    border-radius: 8px;    /* opcional: cantos arredondados */
+    display: block;
+    margin: 0 auto;
+    background-color: #fff; /* evita fundo transparente estranho */
+}

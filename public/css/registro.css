@@ -1,0 +1,117 @@
+/* Fundo geral */
+body {
+  background: linear-gradient(to bottom, #3b0764, #0f172a);
+  min-height: 100vh;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Formulário */
+form {
+  background: #fff;
+  padding: 2.5rem;
+  border-radius: 12px;
+  max-width: 480px;
+  width: 100%;
+  margin-top: 100px;
+  box-shadow: 0 0 24px rgba(0, 0, 0, 0.15);
+}
+
+#register-div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Labels */
+label,
+[x-input-label] {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #374151;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+/* Inputs, selects */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+select {
+  width: 100%;
+  /* padding: 0.75rem; */
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+  background: white;
+  color: #111827;
+}
+
+input:focus,
+select:focus {
+  border-color: #7c3aed;
+  outline: none;
+}
+
+/* Erros */
+.mt-2 {
+  color: #dc2626;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+/* Espaçamentos */
+.mt-4 {
+  margin-top: 1.5rem;
+}
+
+/* Link login */
+a.underline {
+  font-size: 0.875rem;
+  color: #6b7280;
+  text-decoration: none;
+}
+
+a.underline:hover {
+  color: #4b5563;
+  text-decoration: underline;
+}
+
+/* Botão registrar */
+[x-primary-button] {
+  background-color: #7c3aed;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+[x-primary-button]:hover {
+  background-color: #5b21b6;
+}
+
+/* Responsivo */
+@media (max-width: 480px) {
+  form {
+    padding: 2rem;
+  }
+
+  .flex {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+
+  [x-primary-button] {
+    width: 100%;
+  }
+
+  a.underline {
+    text-align: center;
+  }
+}

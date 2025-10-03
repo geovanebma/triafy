@@ -1,0 +1,48 @@
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.main-links x-nav-link {
+  margin-left: 20px;
+}
+
+/* Menu hamburguer (mobile) */
+.menu-toggle button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.menu-toggle .bar {
+  width: 24px;
+  height: 3px;
+  background-color: #333;
+}
+
+/* Profile dropdown */
+.profile-dropdown button {
+  background: none;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.profile-dropdown .icon {
+  display: inline-block;
+  margin-left: 4px;
+}
+
+/* Sidebar */
+.sidebar {
+  padding-top: 1rem;
+  height: 100vh;
+  position: fixed;
+  top: 64px;
+  left: 0;
+  border-right: 1px solid #ddd;
+}

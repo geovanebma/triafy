@@ -1,0 +1,150 @@
+select{
+    width: auto !important;
+}
+
+.without_img{
+    background-color: #fff;
+    color: #888;
+    border-radius: 10px;
+    width: 80px;
+    height: 80px;
+    align-items: center;
+    justify-content: space-around;
+    text-align: center;
+    display: grid;
+}
+
+/* .without_img i{
+    margin-bottom: -20px;
+}
+
+.without_img span{
+    margin-top: -20px;
+} */
+
+.with_img{
+    width: 80px;
+    height: 80px;
+    border-radius: 10px;
+}
+
+body {
+    background: #121212;
+    color: #fff;
+}
+
+.pedidos-lista .pedido-card {
+    background: #1E1E1E;
+    border: 1px solid #2a2a2a;
+    border-radius: 10px;
+    padding: 8px;
+    margin: 5px;
+    transition: transform 0.2s ease-in-out;
+}
+
+.pedidos-lista .pedido-card:hover {
+    transform: translateY(-3px);
+    border-color: #444;
+}
+
+.pedido-img img {
+    width: 60px;
+    height: 60px;
+    border-radius: 6px;
+    background: #2a2a2a;
+    object-fit: cover;
+}
+
+/* Estados de pagamento */
+.bg-aguardando-pagamento,
+.bg-processando-pagamento {
+    background-color: #ffc107; /* amarelo */
+    color: #000;
+}
+
+/* NF-e */
+.bg-nf-e-pendente,
+.bg-processando-emissao-de-nf-e,
+.bg-enviando-nf-e-para-o-canal,
+.bg-erro-ao-enviar-nf-e-para-o-canal {
+    background-color: #9b59b6; /* roxo */
+    color: #fff;
+}
+
+/* Etiqueta */
+.bg-etiqueta-pendente,
+.bg-tentando-obter-etiqueta {
+    background-color: #3498db;
+    color: #fff;
+}
+
+/* Estoque */
+.bg-sem-estoque,
+.bg-pendente,
+.bg-analisando-estoque-de-seguranca {
+    background-color: #e69e22;
+    color: #fff;
+}
+
+/* Separação e envio */
+.bg-em-separacao,
+.bg-separado,
+.bg-empacotado,
+.bg-enviado,
+.bg-entregue,
+.bg-aguardando-coleta {
+    background-color: #36dd11; /* verde */
+    color: #fff;
+}
+
+/* Cancelamento / devolução */
+.bg-analisando-cancelamento,
+.bg-em-processo-de-devolucao,
+.bg-devolvido,
+.bg-cancelado,
+.bg-reembolsado {
+    background-color: #e74c3c; /* vermelho */
+    color: #fff;
+}
+
+/* Situações de análise genéricas */
+.bg-verificando-pedido,
+.bg-analisando-devolucao {
+    background-color: #2980b9; /* azul escuro */
+    color: #fff;
+}
+
+/* Incompleto e não processável */
+.bg-incompleto,
+.bg-nao-processavel {
+    background-color: #7f8c8d; /* cinza */
+    color: #fff;
+}
+
+.text-destaque{
+    color:#FFF !important;
+    font-weight: 300;
+}
+
+.text-label{
+    color: rgb(208 104 245) !important;
+    font-weight: bold;
+}
+
+.text-label-weight{
+    color: rgb(208 104 245) !important;
+    font-weight: 300;
+}
+
+.badge{
+    width: fit-content;
+}
+
+.text-special{
+    color: #9b59b6;
+}
+
+.bg-special{
+    background-color: #9b59b6;
+    /* box-shadow: ; */
+}
