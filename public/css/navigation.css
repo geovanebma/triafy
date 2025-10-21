@@ -356,10 +356,11 @@ a:hover {
     cursor: pointer;
 }
 
-h1, h2, h3, h4,h5, h6{
+h1, h2, h3, h4, h5, h6{
   /* color:  linear-gradient(#3b0764, #5b21b6); */
   /* font-size: 72px; */
-  background: -webkit-linear-gradient(#5b21b6, #7439d4);
+  background: #b09bc1;
+  font-weight: bold;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -381,7 +382,7 @@ p, label{
         height: 400px; /* altura fixa */
         margin: 0 auto;
         display: flex;
-        justify-content: center;
+        /* justify-content: center; */
         align-items: center;
         background-color: #111; /* fundo neutro, útil para imagens menores */
         border-radius: 10px;
