@@ -5,7 +5,6 @@
     min-height: 85vh;
 }
 
-/* Card do produto */
 .produto-card {
     background: #1c1c1c;
     border-radius: 10px;
@@ -22,7 +21,6 @@
     box-shadow: 0 5px 15px rgba(0,0,0,0.5);
 }
 
-/* Status (disponível/indisponível) */
 .produto-card .status {
     position: absolute;
     top: 10px;
@@ -73,10 +71,20 @@
 
 .card-produto img{
     width: 100%;
-    height: 200px;         /* altura fixa para todas */
-    object-fit: cover;     /* mantém proporção e corta o excesso */
-    border-radius: 8px;    /* opcional: cantos arredondados */
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
     display: block;
     margin: 0 auto;
-    background-color: #fff; /* evita fundo transparente estranho */
+    background-color: #fff;
+}
+
+.card-title {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+    min-height: 3.2em;
 }

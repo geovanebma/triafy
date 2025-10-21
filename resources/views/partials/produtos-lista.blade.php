@@ -13,7 +13,6 @@
             <option value="20" selected>20</option>
             <option value="50">50</option>
         </select>
-
         <input type="text" id="filtro-produtos" class="form-control bg-dark text-white border-secondary"
             placeholder="Digite o nome, SKU ou categoria...">
         <button id="abrir-filtro-produtos" class="btn ms-2"><i class="bi bi-sliders2-vertical"></i> Filtrar</button>

@@ -5,7 +5,7 @@
         <div class="row w-100">
             <div class="col-7 col-sm-7 col-md-5 col-xs-5">
                 <a href="{{ url('/inicio') }}" class="pe-auto">
-                    <img id="logo-principal" class="pe-auto logo_width" src="{{ asset('logo.jpeg') }}" alt="">
+                    <img id="logo-principal" aaa="1" class="pe-auto logo_width" src="{{ asset('logo.jpeg') }}" alt="">
                 </a>
                 <i id="menuToggle" class="bi bi-list icons_width float-end"></i>
             </div>
@@ -14,9 +14,7 @@
                     <div class="float-end">
                         <i class="bi bi-bell-fill butons_icons icons_width m-10" title="Notificações"></i>
                         <i class="bi bi-person-fill-gear butons_icons icons_width m-10" title="Editar Perfil"></i>
-                        <i class="bi bi-box-arrow-right pe-auto butons_icons icons_width float-end" id="logout"
-                            title="Sair"
-                            onclick="event.preventDefault(); document.getElementById('form_logout').submit();"></i>
+                        <i class="bi bi-box-arrow-right pe-auto butons_icons icons_width float-end" id="logout" title="Sair" onclick="event.preventDefault(); document.getElementById('form_logout').submit();"></i>
 
                         <form method="POST" class="d-inline m-10" id="form_logout" action="{{ route('logout') }}">
                             @csrf
@@ -32,7 +30,7 @@
         <li class="text-center">
             <i class="bi bi-person-bounding-box pe-auto" id="perfil" title="Perfil"></i>
             <br>
-            <label>{{ Auth::user()->name }}</label>
+            <span>{{ Auth::user()->name }}</span>
             <span class="d-inline">{{ Auth::user()->email }}</span>
         </li>
         <br>
@@ -42,7 +40,8 @@
         <li class="has-submenu open">
             <a href="#"><i class="bi bi-dropbox"></i> Catálogo</a>
             <ul class="submenu">
-                <li><a data-url="{{ route('produtos.index') }}">Catálogo de produtos</a></li>
+                <li><a data-url="{{ route('produtos.index') }}"><i class="bi bi-grid-fill"></i> Catálogo de produtos</a>
+                </li>
                 <li>
                     <a href="#" data-url="{{ route('produtos.create') }}" class="menu-link">
                         <i class="bi bi-bag-plus"></i> Adicionar produto
@@ -53,29 +52,37 @@
         <li class="has-submenu open">
             <a href="#"><i class="bi bi-box-seam"></i> Pedidos</a>
             <ul class="submenu">
-                <li><a href="#" data-url="{{ route('pedidos.listar') }}" class="menu-link">
+                <li>
+                    <a href="#" data-url="{{ route('pedidos.listar', ['tipo' => 'meus']) }}" class="menu-link">
                         <i class="bi bi-box2-fill"></i> Meus pedidos
-                    </a></li>
-                <li><a href="#" data-url="{{ route('pedidos.listar') }}" class="menu-link"><i class="bi bi-boxes"></i>
-                        Todos os pedidos</a></li>
-                <li><a href="{{ route('pedidos.listar') }}"><i class="bi bi-plus"></i> Novo pedido</a></li>
+                    </a>
+                </li>
+                <li>
+                    <a data-url="{{ route('pedidos.listar', ['tipo' => 'todos']) }}" class="menu-link">
+                        <i class="bi bi-boxes"></i> Todos os pedidos
+                    </a>
+                </li>
+                <li>
+                    <a data-url="{{ route('pedidos.inserir') }}">
+                        <i class="bi bi-plus"></i> Novo pedido
+                    </a>
+                </li>
+
             </ul>
         </li>
         <li class="has-submenu open">
             <a href="{{ route('parceiros.index') }}"><i class="bi bi-people"></i> Parceiros</a>
             <ul class="submenu">
-                <li><a href="{{ route('produtos.index') }}"><i class="bi bi-people"></i> Vendedores</a></li>
-                <li><a href="{{ route('produtos.index') }}"><i class="bi bi-person-vcard"></i> Fornecedores</a></li>
+                <li><a href="#" data-url="{{ route('vendedores.listar') }}" class="menu-link"><i class="bi bi-people"></i> Vendedores</a></li>
+                <li><a href="#" data-url="{{ route('fornecedores.listar') }}" class="menu-link"><i class="bi bi-person-vcard"></i> Fornecedores</a></li>
             </ul>
         </li>
         <li class="has-submenu open">
             <a href="{{ route('parceiros.index') }}">Minhas estatísticas</a>
             <ul class="submenu">
                 <li><a href="{{ route('produtos.index') }}"><i class="bi bi-graph-up"></i> Relatórios de vendas</a></li>
-                <li><a href="{{ route('produtos.index') }}"><i class="bi bi-file-earmark-bar-graph-fill"></i> Relatórios
-                        financeiros</a></li>
-                <li><a href="{{ route('produtos.index') }}"><i class="bi bi-file-earmark-bar-graph-fill"></i> Relatórios
-                        gerais (ranking)</a></li>
+                <li><a href="{{ route('produtos.index') }}"><i class="bi bi-file-earmark-bar-graph-fill"></i> Relatórios financeiros</a></li>
+                <li><a href="{{ route('produtos.index') }}"><i class="bi bi-file-earmark-bar-graph-fill"></i> Relatórios gerais (ranking)</a></li>
             </ul>
         </li>
         <li class="has-submenu open">
@@ -113,16 +120,31 @@
             sidebar.style.transition = "transform 0.3s ease-in-out";
         });
 
+        function inicializarLinksAjax() {
+            document.querySelectorAll("a[data-url]").forEach(link => {
+                link.addEventListener("click", function (e) {
+                    e.preventDefault();
+
+                    const url = this.getAttribute("data-url");
+                    fetch(url)
+                        .then(res => res.text())
+                        .then(html => {
+                            document.getElementById("conteudo").innerHTML = html;
+                            inicializarLinksAjax();
+                        })
+                        .catch(err => console.error("Erro ao carregar página:", err));
+                });
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", inicializarLinksAjax);
+
         const menuPais = document.querySelectorAll(".has-submenu > a");
+
         menuPais.forEach(menu => {
             menu.addEventListener("click", function (e) {
                 e.preventDefault();
                 const li = this.parentElement;
-
-                // Fecha outros menus se quiser comportamento "accordion"
-                // document.querySelectorAll(".has-submenu").forEach(item => {
-                //     if (item !== li) item.classList.remove("open");
-                // });
 
                 li.classList.toggle("open");
             });
@@ -142,29 +164,8 @@
                         .then(res => res.text())
                         .then(html => {
                             document.getElementById("conteudo").innerHTML = html;
-                            // inicializarPedidosJS(); // ⚡ ativa os eventos se for pedidos
                         });
                 }
-            });
-        });
-
-        document.querySelectorAll("a[data-url]").forEach(link => {
-            link.addEventListener("click", function (e) {
-                e.preventDefault();
-                const url = this.getAttribute("data-url");
-
-                localStorage.setItem("ultimaPartial", url);
-
-                fetch(url)
-                    .then(res => res.text())
-                    .then(html => {
-                        document.getElementById("conteudo").innerHTML = html;
-                        if (url.includes('/produtos')) {
-                            inicializarProdutosJS();
-                        } else if (url.includes('/pedidos')) {
-                            inicializarPedidosJS();
-                        }
-                    });
             });
         });
 
@@ -175,10 +176,13 @@
                 .then(res => res.text())
                 .then(html => {
                     document.getElementById("conteudo").innerHTML = html;
-                    if (ultimaPartial.includes('/produtos')) {
+                    if (ultimaPartial.includes('/produtos/')) {
+                        inicializarShowProdutoJS();
+                    } else if (ultimaPartial.includes('/produtos')) {
                         inicializarProdutosJS();
                     } else if (ultimaPartial.includes('/pedidos')) {
-                        inicializarPedidosJS();
+                        var tipo = (ultimaPartial.includes('tipo=meus')) ? 'meus' : 'todos';
+                        inicializarPedidosJS(tipo);
                     }
                 });
 
@@ -192,7 +196,7 @@
         }
     });
 
-    function inicializarPedidosJS() {
+    function inicializarPedidosJS(tipo) {
         const conteudoPedidos = document.getElementById("conteudo-pedidos");
         const reloadBtn = document.getElementById("reload-pedidos");
         const qtdSelect = document.getElementById("qtd-pedidos");
@@ -201,11 +205,10 @@
         if (!conteudoPedidos) return;
 
         function carregarPedidos() {
-            console.log(123)
             let qtd = qtdSelect.value;
             let busca = filtroInput.value;
 
-            fetch(`/pedidos/filtro?qtd=${qtd}&busca=${encodeURIComponent(busca)}`)
+            fetch(`/pedidos/filtro?qtd=${qtd}&busca=${encodeURIComponent(busca)}&tipo=${tipo}`)
                 .then(res => res.text())
                 .then(html => {
                     conteudoPedidos.innerHTML = html;
@@ -219,7 +222,6 @@
         carregarPedidos();
     }
 
-    // leitura dos filtros atuais do DOM
     function lerFiltros() {
         const qtdSelect = document.getElementById('qtd-produtos');
         const filtroInput = document.getElementById('filtro-produtos');
@@ -295,10 +297,8 @@
         const exportBtn = document.getElementById('exportar-produtos');
         const abrirFiltroBtn = document.getElementById('abrir-filtro-produtos');
 
-        // Se não estivermos na partial produtos, sai
         if (!container) return;
 
-        // debounce helper
         function debounce(fn, delay = 300) {
             let t;
             return (...args) => {
@@ -306,28 +306,6 @@
                 t = setTimeout(() => fn(...args), delay);
             };
         }
-
-        // função que carrega via fetch e injeta no container
-        // async function carregarProdutos(opts = {}) {
-        //     const filtros = Object.assign(lerFiltros(), opts);
-        //     const url = montarUrl(filtros);
-
-        //     try {
-        //         const res = await fetch(url, {
-        //             headers: {
-        //                 // importante: permite que Request::ajax() no Laravel retorne partial
-        //                 'X-Requested-With': 'XMLHttpRequest'
-        //             }
-        //         });
-
-        //         const html = await res.text();
-        //         container.innerHTML = html;
-        //         inicializarProdutosJS(123);
-
-        //     } catch (err) {
-        //         console.error('Erro ao carregar produtos:', err);
-        //     }
-        // }
 
         const debouncedCarregar = debounce(() => carregarProdutos(), 300);
 
@@ -354,6 +332,28 @@
                 window.location = url.toString();
             });
         }
+
+        document.getElementById("conteudo").addEventListener("click", function (e) {
+            if (e.target && e.target.matches("a[data-url]")) {
+                e.preventDefault();
+                const url = e.target.getAttribute("data-url");
+
+                localStorage.setItem("ultimaPartial", url);
+
+                fetch(url)
+                    .then(res => res.text())
+                    .then(html => {
+                        document.getElementById("conteudo").innerHTML = html;
+                        if (url.includes('/produtos/')) {
+                            inicializarShowProdutoJS();
+                        } else if (url.includes('/produtos')) {
+                            inicializarProdutosJS();
+                        } else if (url.includes('/pedidos')) {
+                            inicializarPedidosJS();
+                        }
+                    });
+            }
+        })
 
         if (abrirFiltroBtn) {
             abrirFiltroBtn.addEventListener('click', () => {
@@ -518,10 +518,110 @@
             }
         }
 
-        document.getElementById("exportar-produtos").addEventListener("click", () => {
-            window.location.href = "/produtos/exportar";
-        });
+        // document.addEventListener("click", function (e) {
+        //     const link = e.target.closest("a[ver-prod], a[data-url]");
+        //     if (!link) return; // clicou em algo que não é link -> ignora
+
+        //     e.preventDefault();
+        //     const url = link.getAttribute("ver-prod") || link.getAttribute("data-url");
+
+        //     if (!url) return;
+
+        //     fetch(url)
+        //         .then(res => res.text())
+        //         .then(html => {
+        //             document.getElementById("conteudo").innerHTML = html;
+        //             // não perde os eventos, pois o listener é global
+        //         });
+        // });
+
+        const exportBtn = document.getElementById("exportar-produtos");
+        if (exportBtn) {
+            exportBtn.addEventListener("click", () => {
+                window.location.href = "/produtos/exportar";
+            });
+        }
     });
 
+    // document.querySelectorAll("a[data-url]").forEach(link => {
+    //     link.addEventListener("click", function (e) {
+    //         e.preventDefault();
+    //         const url = this.getAttribute("data-url");
+
+    //         localStorage.setItem("ultimaPartial", url);
+
+    //         fetch(url)
+    //             .then(res => res.text())
+    //             .then(html => {
+    //                 document.getElementById("conteudo").innerHTML = html;
+    //                 if (url.includes('/produtos')) {
+    //                     inicializarProdutosJS();
+    //                 } else if (url.includes('/pedidos')) {
+    //                     inicializarPedidosJS();
+    //                 }
+    //             });
+    //     });
+    // });
+
+    function inicializarShowProdutoJS() {
+        const thumbs = document.querySelectorAll('.thumb');
+        const mainImg = document.getElementById('slider-main-img');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        let currentIndex = 0;
+
+        if (!thumbs.length || !mainImg) return;
+
+        function updateMainImage(index) {
+            const selected = thumbs[index];
+            mainImg.src = selected.src;
+            thumbs.forEach(t => t.classList.remove('active'));
+            selected.classList.add('active');
+            currentIndex = index;
+        }
+
+        thumbs.forEach((thumb, index) => {
+            thumb.addEventListener('click', () => updateMainImage(index));
+        });
+
+        prevBtn.addEventListener('click', () => {
+            const newIndex = (currentIndex - 1 + thumbs.length) % thumbs.length;
+            updateMainImage(newIndex);
+        });
+
+        nextBtn.addEventListener('click', () => {
+            const newIndex = (currentIndex + 1) % thumbs.length;
+            updateMainImage(newIndex);
+        });
+
+        thumbs[0]?.classList.add('active');
+    }
+
+    document.addEventListener("click", function (e) {
+        const link = e.target.closest("a[ver-prod], a[data-url]");
+        if (!link) return; // clicou em algo que não é link -> ignora
+
+        e.preventDefault();
+        const url = link.getAttribute("ver-prod") || link.getAttribute("data-url");
+
+        localStorage.setItem("ultimaPartial", url);
+
+        if (!url) return;
+
+        fetch(url)
+            .then(res => res.text())
+            .then(html => {
+                document.getElementById("conteudo").innerHTML = html;
+
+                if (url.includes('/produtos/')) {
+                    inicializarShowProdutoJS();
+                } else if (url.includes('/produtos')) {
+                    inicializarProdutosJS();
+                } else if (url.includes('/pedidos')) {
+                    var tipo = (url.includes('tipo=meus')) ? 'meus' : 'todos';
+                    inicializarPedidosJS(tipo);
+                }
+            });
+    });
 </script>
 <link rel="stylesheet" href="{{ asset('js/margem.js') }}">

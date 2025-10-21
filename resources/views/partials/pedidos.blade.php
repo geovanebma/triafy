@@ -37,37 +37,37 @@
             </div>
         </div>
         <div class="row mb-4">
-            <div class="col-md-2 mb-3">
+            <div class="col-6 col-md-2 mb-3">
                 <div class="icon-line bg-special">
                     <span class="icon-number">{{ $aguardandoPagamento }}</span>
                     <label>Aguardando Pag.</label>
                 </div>
             </div>
-            <div class="col-md-2 mb-3">
+            <div class="col-6 col-md-2 mb-3">
                 <div class="icon-line bg-special">
                     <span class="icon-number">{{ $processando }}</span>
                     <label>Processando</label>
                 </div>
             </div>
-            <div class="col-md-2 mb-3">
+            <div class="col-6 col-md-2 mb-3">
                 <div class="icon-line bg-special">
                     <span class="icon-number">{{ $enviados }}</span>
                     <label>Enviados</label>
                 </div>
             </div>
-            <div class="col-md-2 mb-3">
+            <div class="col-6 col-md-2 mb-3">
                 <div class="icon-line bg-special">
                     <span class="icon-number">{{ $pendencias }}</span>
                     <label>Com Pendências</label>
                 </div>
             </div>
-            <div class="col-md-2 mb-3">
+            <div class="col-6 col-md-2 mb-3">
                 <div class="icon-line bg-special">
                     <span class="icon-number">{{ $reembolsados }}</span>
                     <label class="icon-danger">Reembolsados</label>
                 </div>
             </div>
-            <div class="col-md-2 mb-3">
+            <div class="col-6 col-md-2 mb-3">
                 <div class="icon-line bg-special">
                     <span class="icon-number">{{ $cancelados }}</span>
                     <label class="icon-danger">Cancelados</label>

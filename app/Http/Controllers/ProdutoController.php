@@ -6,8 +6,6 @@ use Illuminate\Http\Request;
 use App\Models\Produto;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
-use Maatwebsite\Excel\Facades\Excel;
-use App\Exports\ProdutosExport;
 
 class ProdutoController extends Controller
 {
@@ -114,61 +112,61 @@ class ProdutoController extends Controller
     // }
 
     public function index(Request $request)
-{
-    $qtd = $request->get('qtd', 20);
-    $busca = $request->get('busca');
-    $categoria = $request->get('categoria');
-    $ordenar = $request->get('ordenar');
-    $valorMin = $request->get('preco_min'); // no front continua preco_min
-    $valorMax = $request->get('preco_max'); // no front continua preco_max
+    {
+        $qtd = $request->get('qtd', 20);
+        $busca = $request->get('busca');
+        $categoria = $request->get('categoria');
+        $ordenar = $request->get('ordenar');
+        $valorMin = $request->get('preco_min'); // no front continua preco_min
+        $valorMax = $request->get('preco_max'); // no front continua preco_max
 
-    $query = Produto::query();
+        $query = Produto::query();
 
-    // 🔎 Filtro de busca
-    if ($busca) {
-        $query->where(function ($q) use ($busca) {
-            $q->where('nome', 'LIKE', "%{$busca}%")
-              ->orWhere('sku', 'LIKE', "%{$busca}%")
-              ->orWhere('categoria', 'LIKE', "%{$busca}%");
-        });
+        // 🔎 Filtro de busca
+        if ($busca) {
+            $query->where(function ($q) use ($busca) {
+                $q->where('nome', 'LIKE', "%{$busca}%")
+                    ->orWhere('sku', 'LIKE', "%{$busca}%")
+                    ->orWhere('categoria', 'LIKE', "%{$busca}%");
+            });
+        }
+
+        // 📂 Filtro de categoria
+        if ($categoria) {
+            $query->where('categoria', $categoria);
+        }
+
+        // 💰 Filtro de valor mínimo
+        if ($valorMin !== null && $valorMin !== '') {
+            $query->where('valor', '>=', (float) $valorMin);
+        }
+
+        // 💰 Filtro de valor máximo
+        if ($valorMax !== null && $valorMax !== '') {
+            $query->where('valor', '<=', (float) $valorMax);
+        }
+
+        // 📊 Ordenação
+        if ($ordenar === 'preco_asc') {
+            $query->orderBy('valor', 'asc');
+        } elseif ($ordenar === 'preco_desc') {
+            $query->orderBy('valor', 'desc');
+        } else {
+            $query->orderBy('created_at', 'desc'); // default
+        }
+
+        $produtos = $query->paginate($qtd);
+
+        // ⚡ Resposta parcial para AJAX
+        if ($request->header('X-Requested-With') === 'XMLHttpRequest') {
+            return view('partials.produtos-lista-content', compact('produtos'))->render();
+        }
+
+        // 📌 Lista de categorias para o filtro
+        $categorias = Produto::select('categoria')->distinct()->pluck('categoria');
+
+        return view('partials.produtos-lista', compact('produtos', 'categorias'));
     }
-
-    // 📂 Filtro de categoria
-    if ($categoria) {
-        $query->where('categoria', $categoria);
-    }
-
-    // 💰 Filtro de valor mínimo
-    if ($valorMin !== null && $valorMin !== '') {
-        $query->where('valor', '>=', (float)$valorMin);
-    }
-
-    // 💰 Filtro de valor máximo
-    if ($valorMax !== null && $valorMax !== '') {
-        $query->where('valor', '<=', (float)$valorMax);
-    }
-
-    // 📊 Ordenação
-    if ($ordenar === 'preco_asc') {
-        $query->orderBy('valor', 'asc');
-    } elseif ($ordenar === 'preco_desc') {
-        $query->orderBy('valor', 'desc');
-    } else {
-        $query->orderBy('created_at', 'desc'); // default
-    }
-
-    $produtos = $query->paginate($qtd);
-
-    // ⚡ Resposta parcial para AJAX
-    if ($request->header('X-Requested-With') === 'XMLHttpRequest') {
-        return view('partials.produtos-lista-content', compact('produtos'))->render();
-    }
-
-    // 📌 Lista de categorias para o filtro
-    $categorias = Produto::select('categoria')->distinct()->pluck('categoria');
-
-    return view('partials.produtos-lista', compact('produtos', 'categorias'));
-}
 
 
 
@@ -258,8 +256,80 @@ class ProdutoController extends Controller
     //         ->header('Content-Disposition', 'attachment; filename=produtos.csv');
     // }
 
-public function exportar(Request $request)
-{
-    return Excel::download(new ProdutosExport($request), 'produtos.xlsx');
-}
+    // public function exportar(Request $request)
+    // {
+    //     return Excel::download(new ProdutosExport($request), 'produtos.xlsx');
+    // }
+
+    // public function exportar(Request $request)
+    // {
+    //     $produtos = Produto::all();
+    //     $filename = "produtos.csv";
+
+    //     $handle = fopen('php://temp', 'r+');
+    //     fputcsv($handle, ['Nome', 'SKU', 'Categoria', 'Valor'], ';');
+
+    //     foreach ($produtos as $p) {
+    //         fputcsv($handle, [
+    //             $p->nome,
+    //             $p->sku,
+    //             $p->categoria,
+    //             $p->valor
+    //         ], ';'); // usa ; que o Excel entende melhor
+    //     }
+
+    //     rewind($handle);
+    //     $content = stream_get_contents($handle);
+    //     fclose($handle);
+
+    //     return response($content)
+    //         ->header('Content-Type', 'text/csv; charset=UTF-8')
+    //         ->header('Content-Disposition', "attachment; filename={$filename}")
+    //         ->header('Pragma', 'no-cache')
+    //         ->header('Expires', '0');
+    // }
+
+    public function exportar(Request $request)
+    {
+        $produtos = Produto::all();
+        $filename = "produtos.csv";
+
+        $handle = fopen('php://temp', 'r+');
+
+        // escreve BOM para o Excel entender UTF-8
+        fprintf($handle, chr(0xEF) . chr(0xBB) . chr(0xBF));
+
+        // cabeçalho
+        fputcsv($handle, ['Nome', 'SKU', 'Categoria', 'Valor'], ';');
+
+        // dados
+        foreach ($produtos as $p) {
+            fputcsv($handle, [
+                $p->nome,
+                $p->sku,
+                $p->categoria,
+                $p->valor
+            ], ';'); // usa ; que o Excel entende melhor
+        }
+
+        rewind($handle);
+        $content = stream_get_contents($handle);
+        fclose($handle);
+
+        return response($content)
+            ->header('Content-Type', 'text/csv; charset=UTF-8')
+            ->header('Content-Disposition', "attachment; filename={$filename}")
+            ->header('Pragma', 'no-cache')
+            ->header('Expires', '0');
+    }
+
+    public function show($id)
+    {
+        $produto = Produto::findOrFail($id);
+
+        // return view('produtos.show', compact('produto'));
+        return view('partials.show', compact('produto'));
+    }
+
+
 }

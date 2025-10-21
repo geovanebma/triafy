@@ -148,3 +148,7 @@ body {
     background-color: #9b59b6;
     /* box-shadow: ; */
 }
+
+.bg-special label{
+    font-size: 0.8rem !important;
+}
